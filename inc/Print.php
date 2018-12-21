@@ -3161,15 +3161,6 @@ WHERE users.$kind = ? LIMIT 1", [$u]);
 
 	}
 
-
-
-
-
-
-
-
-
-
 	public static function AdminViewAnticheatReports() {
 		$resultsPerPage = 50;
 
@@ -3817,25 +3808,6 @@ WHERE users.$kind = ? LIMIT 1", [$u]);
 			redirect('index.php?p=135&e='.$e->getMessage());
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 
