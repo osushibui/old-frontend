@@ -7,10 +7,15 @@ class P {
 	*/
 	public static function AdminDashboard() {
 		// Get admin dashboard data
+		/*
 		$submittedScoresFull = current($GLOBALS['db']->fetch('SELECT COUNT(*) FROM scores LIMIT 1'));
 		$submittedScores = number_format($submittedScoresFull / 1000000, 2) . "m";
-		$totalScoresFull = current($GLOBALS['db']->fetch('SELECT SUM(playcount_std) + SUM(playcount_taiko) + SUM(playcount_ctb) + SUM(playcount_mania) FROM users_stats WHERE 1'));
-		$totalScores = number_format($totalScoresFull  / 1000000, 2) . "m";
+		*/
+		$totalScoresFullVanilla = current($GLOBALS['db']->fetch('SELECT SUM(playcount_std) + SUM(playcount_taiko) + SUM(playcount_ctb) + SUM(playcount_mania) FROM users_stats WHERE 1'));
+		$totalScoresVanilla = number_format($totalScoresFullVanilla  / 1000000, 2) . "m";
+
+		$totalScoresFullRelax = current($GLOBALS['db']->fetch('SELECT SUM(playcount_std) + SUM(playcount_taiko) + SUM(playcount_ctb) + SUM(playcount_mania) FROM rx_stats WHERE 1'));
+		$totalScoresRelax = number_format($totalScoresFullRelax  / 1000000, 2) . "m";
 		// $betaKeysLeft = "∞";
 		/*$totalPPQuery = $GLOBALS['db']->fetch("SELECT SUM(pp) FROM scores WHERE completed = 3 LIMIT 1");
 		$totalPP = 0;
@@ -19,7 +24,7 @@ class P {
 		}
 		$totalPP = number_format($totalPP);*/
 		$totalPP = "🍆";
-		$recentPlays = $GLOBALS['db']->fetchAll('
+		$recentPlaysVanilla = $GLOBALS['db']->fetchAll('
 		SELECT
 			beatmaps.song_name, scores.beatmap_md5, users.username,
 			scores.userid, scores.time, scores.score, scores.pp,
@@ -29,8 +34,20 @@ class P {
 		LEFT JOIN users ON users.id = scores.userid
 		ORDER BY scores.id DESC
 		LIMIT 10');
-		$topPlays = [];
-		/*$topPlays = $GLOBALS['db']->fetchAll('SELECT
+
+		$recentPlaysRelax = $GLOBALS['db']->fetchAll('
+		SELECT
+			beatmaps.song_name, scores_relax.beatmap_md5, users.username,
+			scores_relax.userid, scores_relax.time, scores_relax.score, scores_relax.pp,
+			scores_relax.play_mode, scores_relax.mods
+		FROM scores_relax
+		LEFT JOIN beatmaps ON beatmaps.beatmap_md5 = scores_relax.beatmap_md5
+		LEFT JOIN users ON users.id = scores_relax.userid
+		ORDER BY scores_relax.id DESC
+		LIMIT 10');
+
+		$topPlaysVanilla = [];
+		$topPlaysVanilla = $GLOBALS['db']->fetchAll('SELECT
 			beatmaps.song_name, scores.beatmap_md5, users.username,
 			scores.userid, scores.time, scores.score, scores.pp,
 			scores.play_mode, scores.mods
@@ -38,7 +55,19 @@ class P {
 		LEFT JOIN beatmaps ON beatmaps.beatmap_md5 = scores.beatmap_md5
 		LEFT JOIN users ON users.id = scores.userid
 		WHERE users.privileges & 1 > 0
-		ORDER BY scores.pp DESC LIMIT 30');*/
+		ORDER BY scores.pp DESC LIMIT 30');
+
+		$topPlaysRelax = [];
+		$topPlaysRelax = $GLOBALS['db']->fetchAll('SELECT
+			beatmaps.song_name, scores_relax.beatmap_md5, users.username,
+			scores_relax.userid, scores_relax.time, scores_relax.score, scores_relax.pp,
+			scores_relax.play_mode, scores_relax.mods
+		FROM scores_relax
+		LEFT JOIN beatmaps ON beatmaps.beatmap_md5 = scores_relax.beatmap_md5
+		LEFT JOIN users ON users.id = scores_relax.userid
+		WHERE users.privileges & 1 > 0
+		ORDER BY scores_relax.pp DESC LIMIT 30');
+
 		$onlineUsers = getJsonCurl("http://127.0.0.1:5001/api/v1/onlineUsers");
 		if ($onlineUsers == false) {
 			$onlineUsers = 0;
@@ -55,18 +84,20 @@ class P {
 		self::GlobalAlert();
 		// Stats panels
 		echo '<div class="row">';
-		printAdminPanel('primary', 'fa fa-gamepad fa-5x', $submittedScores, 'Submitted scores', number_format($submittedScoresFull));
-		printAdminPanel('red', 'fa fa-wheelchair-alt fa-5x', $totalScores, 'Total plays', number_format($totalScoresFull));
+		//printAdminPanel('primary', 'fa fa-gamepad fa-5x', $submittedScores, 'Submitted scores', number_format($submittedScoresFull));
+		printAdminPanel('red', 'fa fa-wheelchair-alt fa-5x', $totalScoresVanilla, 'Vanilla plays', number_format($totalScoresFullVanilla));
+		printAdminPanel('red', 'fa fa-wheelchair-alt fa-5x', $totalScoresRelax, 'Relax plays', number_format($totalScoresFullRelax));
 		printAdminPanel('green', 'fa fa-street-view fa-5x', $onlineUsers, 'Online users');
 		printAdminPanel('yellow', 'fa fa-dot-circle-o fa-5x', $totalPP, 'Total PP');
 		echo '</div>';
-		// Recent plays table
+
+		// Recent plays table (Vanilla)
 		echo '<table class="table table-striped table-hover">
 		<thead>
-		<tr><th class="text-left"><i class="fa fa-clock-o"></i>	Recent plays</th><th>Beatmap</th></th><th>Mode</th><th>Sent</th><th>Score</th><th class="text-right">PP</th></tr>
+		<tr><th class="text-left"><i class="fa fa-clock-o"></i>	Recent plays (Vanilla)</th><th>Beatmap</th></th><th>Mode</th><th>Sent</th><th>Score</th><th class="text-right">PP</th></tr>
 		</thead>
 		<tbody>';
-		foreach ($recentPlays as $play) {
+		foreach ($recentPlaysVanilla as $play) {
 			// set $bn to song name by default. If empty or null, replace with the beatmap md5.
 			$bn = $play['song_name'];
 			// Check if this beatmap has a name cached, if yes show it, otherwise show its md5
@@ -86,14 +117,42 @@ class P {
 			echo '</tr>';
 		}
 		echo '</tbody>';
-		// Top plays table
+
+		// Recent plays table (Relax)
+		echo '<table class="table table-striped table-hover">
+		<thead>
+		<tr><th class="text-left"><i class="fa fa-clock-o"></i>	Recent plays (Relax)</th><th>Beatmap</th></th><th>Mode</th><th>Sent</th><th>Score</th><th class="text-right">PP</th></tr>
+		</thead>
+		<tbody>';
+		foreach ($recentPlaysRelax as $play) {
+			// set $bn to song name by default. If empty or null, replace with the beatmap md5.
+			$bn = $play['song_name'];
+			// Check if this beatmap has a name cached, if yes show it, otherwise show its md5
+			if (!$bn) {
+				$bn = $play['beatmap_md5'];
+			}
+			// Get readable play_mode
+			$pm = getPlaymodeText($play['play_mode']);
+			// Print row
+			echo '<tr class="success">';
+			echo '<td><p class="text-left"><b><a href="index.php?u='.$play["username"].'">'.$play['username'].'</a></b></p></td>';
+			echo '<td><p class="text-left">'.$bn.' <b>' . getScoreMods($play['mods']) . '</b></p></td>';
+			echo '<td><p class="text-left">'.$pm.'</p></td>';
+			echo '<td><p class="text-left">'.timeDifference(time(), $play['time']).'</p></td>';
+			echo '<td><p class="text-left">'.number_format($play['score']).'</p></td>';
+			echo '<td><p class="text-right"><b>'.number_format($play['pp']).'pp</b></p></td>';
+			echo '</tr>';
+		}
+		echo '</tbody>';
+
+		// Top plays table (Vanilla)
 		echo '<table class="table table-striped table-hover">
 		<thead>
 		<tr><th class="text-left"><i class="fa fa-trophy"></i>	Top plays</th><th>Beatmap</th></th><th>Mode</th><th>Sent</th><th class="text-right">PP</th></tr>
 		</thead>
 		<tbody>';
-		echo '<tr class="danger"><td colspan=5>Disabled</td></tr>';
-		foreach ($topPlays as $play) {
+		//echo '<tr class="danger"><td colspan=5>Disabled</td></tr>';
+		foreach ($topPlaysVanilla as $play) {
 			// set $bn to song name by default. If empty or null, replace with the beatmap md5.
 			$bn = $play['song_name'];
 			// Check if this beatmap has a name cached, if yes show it, otherwise show its md5
@@ -112,6 +171,34 @@ class P {
 			echo '</tr>';
 		}
 		echo '</tbody>';
+
+		// Top plays table (Relax)
+		echo '<table class="table table-striped table-hover">
+		<thead>
+		<tr><th class="text-left"><i class="fa fa-trophy"></i>	Top plays</th><th>Beatmap</th></th><th>Mode</th><th>Sent</th><th class="text-right">PP</th></tr>
+		</thead>
+		<tbody>';
+		//echo '<tr class="danger"><td colspan=5>Disabled</td></tr>';
+		foreach ($topPlaysRelax as $play) {
+			// set $bn to song name by default. If empty or null, replace with the beatmap md5.
+			$bn = $play['song_name'];
+			// Check if this beatmap has a name cached, if yes show it, otherwise show its md5
+			if (!$bn) {
+				$bn = $play['beatmap_md5'];
+			}
+			// Get readable play_mode
+			$pm = getPlaymodeText($play['play_mode']);
+			// Print row
+			echo '<tr class="warning">';
+			echo '<td><p class="text-left"><a href="index.php?u='.$play["username"].'"><b>'.$play['username'].'</b></a></p></td>';
+			echo '<td><p class="text-left">'.$bn.' <b>' . getScoreMods($play['mods']) . '</b></p></td>';
+			echo '<td><p class="text-left">'.$pm.'</p></td>';
+			echo '<td><p class="text-left">'.timeDifference(time(), $play['time']).'</p></td>';
+			echo '<td><p class="text-right"><b>'.number_format($play['pp']).'</b></p></td>';
+			echo '</tr>';
+		}
+		echo '</tbody>';
+
 		echo '</div>';
 	}
 
