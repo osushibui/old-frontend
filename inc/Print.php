@@ -32,6 +32,7 @@ class P {
 		FROM scores
 		LEFT JOIN beatmaps ON beatmaps.beatmap_md5 = scores.beatmap_md5
 		LEFT JOIN users ON users.id = scores.userid
+		WHERE scores.completed = 3
 		ORDER BY scores.id DESC
 		LIMIT 10');
 
@@ -3058,7 +3059,7 @@ WHERE users.$kind = ? LIMIT 1", [$u]);
 			<td><p class="text-center"><a href="index.php?u=' . $report["from_uid"] . '" target="_blank">'.getUserUsername($report['from_uid']).'</a></p></td>
 			<td><p class="text-center"><b><a href="index.php?u=' . $report["to_uid"] . '" target="_blank">'.getUserUsername($report['to_uid']).'</a></b></p></td>
 			<td><p>'.htmlspecialchars(substr($report['reason'], 0, 40)).'</p></td>
-			<td><p>'.timeDifference(time(), $report['time']).'</p></td>
+			<td><p>'.timeDifference(time(), $report['open_time']).'</p></td>
 			<td><p class="text-center">' . $assignee . '</p></td>
 			<td><p class="text-center">
 			<a title="View/Edit report" class="btn btn-xs btn-primary" href="index.php?p=127&id='.$report['id'].'"><span class="glyphicon glyphicon-zoom-in"></span></a>
