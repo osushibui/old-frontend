@@ -1,5 +1,3 @@
-[Discord](https://discord.gg/vY29JhD)
-
 ## old-frontend
 
 This is Shibui's deprecated frontend, written in PHP which is used purely for  the admin panel.
