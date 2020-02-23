@@ -240,7 +240,7 @@ class P {
 		echo '<div class="row">';
 		printAdminPanel('primary', 'fa fa-user fa-5x', $totalUsers, 'Total users');
 		printAdminPanel('red', 'fa fa-thumbs-down fa-5x', $bannedUsers, 'Banned users');
-		printAdminPanel('yellow', 'fa fa-money fa-5x', $supporters, 'Supporters');
+		printAdminPanel('yellow', 'fa fa-money fa-5x', $supporters, 'Donors');
 		//printAdminPanel('green', 'fa fa-star fa-5x', $modUsers, 'Admins');
 		printAdminPanel('yellow', 'fa fa-money fa-5x', $premiums, 'Premium members');
 		echo '</div>';
@@ -723,8 +723,7 @@ class P {
 								if (hasPrivilege(Privileges::UserDonor, $_GET["id"])) {
 									echo '	<a onclick="sure(\'submit.php?action=removeDonor&id='.$_GET['id'].'&csrf='.csrfToken().'\');" class="btn btn-danger">Remove donor</a>';
 								}
-								echo '	<a href="index.php?p=121&id='.$_GET['id'].'" class="btn btn-warning">Give supporter</a>';
-								echo '	<a href="index.php?p=221&id='.$_GET['id'].'" class="btn btn-warning">Give premium</a>';
+								echo '	<a href="index.php?p=121&id='.$_GET['id'].'" class="btn btn-warning">Give donor</a>';
 								echo '	<a href="https://akatsuki.pw/u/'.$_GET['id'].'" class="btn btn-primary">View profile</a>';
 								if (hasPrivilege(Privileges::AdminManageUsers)) {
 									echo '	<a href="index.php?p=132&uid=' . $_GET['id'] . '" class="btn btn-danger">View anticheat reports</a>';
@@ -2666,7 +2665,7 @@ WHERE users.$kind = ? LIMIT 1", [$u]);
 			echo '<div id="page-content-wrapper">';
 			// Maintenance check
 			self::MaintenanceStuff();
-			echo '<p align="center"><font size=5><i class="fa fa-money"></i>	Give supporter</font></p>';
+			echo '<p align="center"><font size=5><i class="fa fa-money"></i>	Give donor</font></p>';
 			$username = $GLOBALS["db"]->fetch("SELECT username FROM users WHERE id = ?", [$_GET["id"]]);
 			if (!$username) {
 				throw new Exception("Invalid user");
@@ -2702,68 +2701,7 @@ WHERE users.$kind = ? LIMIT 1", [$u]);
 
 			echo '</tbody></form>';
 			echo '</table>';
-			echo '<div class="text-center"><button type="submit" form="edit-user-badges" class="btn btn-primary">Give supporter</button></div>';
-			echo '</div>';
-		}
-		catch(Exception $e) {
-			// Redirect to exception page
-			redirect('index.php?p=108&e='.$e->getMessage());
-		}
-	}
-
-
-	/*
-	 * AdminGivePremium
-	 * Prints the admin give premium page
-	*/
-	public static function AdminGivePremium() {
-		try {
-			// Check if id is set
-			if (!isset($_GET['id'])) {
-				throw new Exception('Invalid user id');
-			}
-			echo '<div id="wrapper">';
-			printAdminSidebar();
-			echo '<div id="page-content-wrapper">';
-			// Maintenance check
-			self::MaintenanceStuff();
-			echo '<p align="center"><font size=5><i class="fa fa-money"></i>	Give premium</font></p>';
-			$username = $GLOBALS["db"]->fetch("SELECT username FROM users WHERE id = ?", [$_GET["id"]]);
-			if (!$username) {
-				throw new Exception("Invalid user");
-			}
-			$username = current($username);
-			echo '<table class="table table-striped table-hover table-50-center"><tbody>';
-			echo '<form id="edit-user-badges" action="submit.php" method="POST">
-			<input name="csrf" type="hidden" value="'.csrfToken().'">
-			<input name="action" value="givePremium" hidden>';
-			echo '<tr>
-			<td>User ID</td>
-			<td><p class="text-center"><input type="text" name="id" class="form-control" value="'.$_GET["id"].'" readonly></td>
-			</tr>';
-			echo '<tr>
-			<td>Username</td>
-			<td><p class="text-center"><input type="text" class="form-control" value="'.$username.'" readonly></td>
-			</tr>';
-			echo '<tr>
-			<td>Period</td>
-			<td>
-			<input name="m" type="number" class="form-control" placeholder="Months" required></input>
-			</td>
-			</tr>';
-			echo '<tr>
-			<td>Operation type</td>
-			<td>
-			<select name="type" class="selectpicker" data-width="100%">
-				<option value=0 selected>Add months</option>
-				<option value=1>Replace months</option>
-			</select></td>
-			</tr>';
-
-
-			echo '</tbody></form>';
-			echo '</table>';
-			echo '<div class="text-center"><button type="submit" form="edit-user-badges" class="btn btn-primary">Give premium</button></div>';
+			echo '<div class="text-center"><button type="submit" form="edit-user-badges" class="btn btn-primary">Give donor</button></div>';
 			echo '</div>';
 		}
 		catch(Exception $e) {
@@ -3973,4 +3911,3 @@ class Egg extends Exception {
 	   parent::__construct($message, $code, $previous);
    }
 }
-
