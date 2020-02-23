@@ -13,6 +13,11 @@ $ cd inc
 $ cp config.sample.php config.php
 $ nano config.php
 ```
+Then, clone phpmyadmin so we can access it at old.domain/phpmyadmin
+```
+$ cd ..
+$ ln -s /usr/share/phpmyadmin phpmyadmin
+```
 Then, run composer install on the main directory
 ```
 $ composer install
