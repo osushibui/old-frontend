@@ -1317,13 +1317,13 @@ class P {
 			}
 		}
 		echo '<p align="center">
-		<object data="images/logos/logo.png" type="image/png" class="animated bounceIn ripple-logo"></object>
+		<object data="https://shibui.pw/static/logos/ainu.png" type="image/png" class="animated bounceIn ripple-logo"></object>
 		</p>';
 		global $isBday;
 		if ($isBday) {
-			echo '<h1>Happy birthday Akatsuki!</h1>';
+			echo '<h1>Happy birthday Shibui!</h1>';
 		} else {
-			echo '<h1>Welcome to Akatsuki\'s Admin Panel.</h1>';
+			echo '<h1>Welcome to Shibui\'s Admin Panel.</h1>';
 		}
 		// Home alert
 		self::HomeAlert();

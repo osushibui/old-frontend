@@ -167,8 +167,7 @@ function setTitle($p) {
 			133 => 'View anticheat report',
 			134 => 'Restore scores',
 			135 => 'Search users by IP',
- 			136 => 'Search users by IP - Results'
-			// cmyui's Additions
+ 			136 => 'Search users by IP - Results',
 			222 => 'Rollback user (Relax)',
 			223 => 'Wipe user (Relax)',
 			234 => 'Restore scores (Relax)',
@@ -458,7 +457,7 @@ function printNavbar() {
 							</button>';
 						}
 						global $isBday;
-						echo $isBday ? '<a class="navbar-brand" href="index.php"><i class="fa fa-birthday-cake"></i><img src="images/logos/text.png" style="display: inline; padding-left: 10px;"></a>' : '<a class="navbar-brand" href="index.php"><img src="images/logos/text.png"></a>';
+						echo $isBday ? '<a class="navbar-brand" href="index.php"><i class="fa fa-birthday-cake"></i><img src="https://shibui.pw/static/logos/text-black.png" style="display: inline; padding-left: 10px;"></a>' : '<a class="navbar-brand" href="index.php"><img src="https://shibui.pw/static/logos/text-black.png"></a>';
 					echo '</div>
 					<div class="navbar-collapse collapse">';
 	// Left elements
@@ -471,7 +470,8 @@ function printNavbar() {
 	if (checkLoggedIn()) {
 		// Just an easter egg that you'll probably never notice, unless you do it on purpose.
 		if (hasPrivilege(Privileges::AdminAccessRAP)) {
-			echo '<li><a href="index.php?p=100"><i class="fa fa-cog"></i>	<b>Admin Panel</b></a></li>';
+			echo '<li><a href="index.php?p=125"><i class="fa fa-cog"></i>	<b>Admin Panel</b></a></li>';
+			echo '<li><a href="https://old.shibui.pw/phpmyadmin"><i class="fas fa-database"></i>	<b>PHPMyAdmin</b></a></li>';
 		}
 	}
 	// Right elements
