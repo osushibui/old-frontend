@@ -174,11 +174,11 @@ function setTitle($p) {
 			
 		];
 		if (isset($namesRipple[$p])) {
-			return __maketitle('Akatsuki', $namesRipple[$p]);
+			return __maketitle('Shibui', $namesRipple[$p]);
 		} else if (isset($namesRAP[$p])) {
-			return __maketitle('Akatsuki Admin', $namesRAP[$p]);
+			return __maketitle('Shibui Admin Panel', $namesRAP[$p]);
 		} else {
-			return __maketitle('Akatsuki', '404');
+			return __maketitle('Shibui', '404');
 		}
 	}
 }
@@ -499,7 +499,7 @@ function printAdminSidebar() {
 	echo '<div id="sidebar-wrapper" class="collapse" aria-expanded="false">
 					<ul class="sidebar-nav">
 						<li class="sidebar-brand">
-							<a href="#"><b>A</b>katsuki <b>A</b>dmin <b>P</b>anel</a>
+							<a href="#"><b>S</b>hibui <b>A</b>dmin <b>P</b>anel</a>
 						</li>
 						<li><a href="index.php?p=100"><i class="fa fa-tachometer"></i>	Dashboard</a></li>';
 

@@ -53,7 +53,7 @@ if (isset($_GET['p'])) {
 } elseif (isset($_GET['__PAGE__'])) {
 	$pages_split = explode('/', $_GET['__PAGE__']);
 	if (count($_GET['__PAGE__']) < 2) {
-		$title = '<title>Akatsuki</title>';
+		$title = '<title>Shibui</title>';
 		$p = 1;
 	}
 	$found = false;
@@ -67,11 +67,11 @@ if (isset($_GET['p'])) {
 	}
 	if (!$found) {
 		$p = 1;
-		$title = '<title>Akatsuki</title>';
+		$title = '<title>Shibui</title>';
 	}
 } else {
 	$p = 1;
-	$title = '<title>Akatsuki</title>';
+	$title = '<title>Shibui</title>';
 }
 ?>
 <!DOCTYPE html>
