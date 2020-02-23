@@ -1,4 +1,4 @@
-[![Discord]](https://discord.gg/vY29JhD)
+[Discord](https://discord.gg/vY29JhD)
 
 ## old-frontend
 
